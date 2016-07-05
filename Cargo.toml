@@ -1,6 +1,0 @@
-[package]
-name = "verbose-happiness"
-version = "0.1.0"
-authors = ["Will Long <will.long043@gmail.com>"]
-
-[dependencies]

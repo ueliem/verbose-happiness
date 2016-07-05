@@ -1,2 +1,6 @@
 target
 *.pyc
+*.lex.sml
+*.grm.sml
+*.grm.sig
+

@@ -1,0 +1,43 @@
+
+%%
+
+%name BLIF
+
+%term EOF | DOTMODEL | DOTINPUTS | DOTOUTPUTS | DOTCLOCK | DOTEND | ID of string
+
+%nonterm START | MODEL of AST.m | INPUTS of AST.a | OUTPUTS of AST.a | CLOCK of AST.a | IDENTLIST of AST.a
+
+%pos int
+
+%eop EOF
+%noshift EOF
+
+%%
+
+(* start = model∗
+model = identifier × identifier∗ × identifier∗ × identifier∗ × component∗
+component = Comb(comb gate) | Latch(latch) | Subckt(subcircuit) | Reset(comb gate)
+comb gate = identifier∗ × identifier∗ × [row] × table
+table = (row × row)∗
+row = literal∗
+literal = 0 | 1 | DontCare
+latch = identifier × identifier
+subcircuit = identifier × form act
+form act = (identifier × identifier)∗ *)
+
+	START : MODEL (MODEL1)
+	MODEL :
+		DOTMODEL ID INPUTS OUTPUTS CLOCK DOTEND (AST.Model (AST.ID ID1, INPUTS1, OUTPUTS1, CLOCK1))
+	INPUTS :
+		DOTINPUTS IDENTLIST (IDENTLIST1)
+		| (AST.EmptyList)
+	OUTPUTS :
+		DOTOUTPUTS IDENTLIST (IDENTLIST1)
+		| (AST.EmptyList)
+	CLOCK :
+		DOTCLOCK IDENTLIST (IDENTLIST1)
+		| (AST.EmptyList)
+	IDENTLIST :
+		IDENTLIST ID (AST.IDList (IDENTLIST1, AST.ID ID1))
+		| ID (AST.ID ID1)
+
