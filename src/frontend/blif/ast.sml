@@ -1,15 +1,20 @@
 structure AST =
 
 struct
-  datatype a =
+    datatype a =
         Num of int
         | ID of string
+        | Zero
+        | One
+        | Two
+        | Three
         | IDList of a * a
-        | EmptyList
-  and c =
+        | FormalActual of string * string
+    and c =
         Skip
-        | Seq of c * c
-  and m =
-        Model of a * a * a * a
+        | LogicGate of string list * (a list list)
+        | ModelRef of string * a list
+    and m =
+        Model of string * string list * string list * string list * c list
 end
 

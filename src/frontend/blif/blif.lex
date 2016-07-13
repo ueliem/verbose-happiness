@@ -15,52 +15,8 @@ val badCh : int * char -> unit = fn
 	(l1,ch) => TextIO.output(TextIO.stdOut,"lex:line "
 		^Int.toString l1^": Invalid character "
 		^Int.toString(ord ch)^"="^str(ch)^"\n")
-(* val mlCommentStack : (string*int) list ref = ref []; *)
-(* val eof = fn fileName =>
-	(if (!mlCommentStack)=[] then ()
-	else let val (file,line) = hd (!mlCommentStack)
-		in TextIO.output(TextIO.stdOut,
-			"      I am surprized to find the"
-			^" end of file \""fileName^"\"\n"
-			^"      in a block comment which began"
-			^" at "^file^"["^Int.toString line^"].\n")
-		end;
-	T.EOF(!linep,!linep)); *)
-val eof = fn fileName => T.EOF(!linep,!linep);
 
-structure KeyWord :
-sig
-	val find:string->(int*int->(svalue,int) token) option
-end =
-struct
-	val TableSize =  422 (* 211 *)
-	val HashFactor = 5
-	val hash = fn
-		s => List.foldr (fn (c,v) => (v*HashFactor+(ord c))
-							mod TableSize) 0 (explode s)
-	val HashTable = Array.array(TableSize,nil) :
-		(string * (int * int -> (svalue,int) token))
-		list Array.array
-	val add = fn
-		(s,v) => let val i = hash s
-				in Array.update(HashTable,i,(s,v)
-				:: (Array.sub(HashTable, i)))
-				end
-	val find = fn
-		s => let val i = hash s
-			fun f ((key,v)::r) = if s=key then SOME v
-									else f r
-				| f nil = NONE
-		in  f (Array.sub(HashTable, i))
-		end
-	val _ = (List.app add [
-		(".model",    T.DOTMODEL),
-		(".inputs", T.DOTINPUTS),
-		(".outputs",  T.DOTOUTPUTS),
-		(".clock",   T.DOTCLOCK),
-		(".end",   T.DOTEND)
-	]) 
-end
+val eof = fn fileName => T.EOF(!linep,!linep);
 
 %%
 
@@ -70,13 +26,49 @@ end
 
 alpha=[A-Za-z];
 digit=[0-9];
-ws = [\ \t];
-newline="\n";
+ws = [\ \t\n];
 dot=".";
+equals="=";
+dash="-";
+zero="0";
+one="1";
+two="2";
+three="3";
 
 integer = {digit}+;
 
 %%
 
 {ws}+ => (continue());
+<INITIAL>{equals} => (Tokens.EQUALS(!linep,!linep));
+<INITIAL>{dash} => (Tokens.DASH(!linep,!linep));
+
+<INITIAL>{zero} => (Tokens.ZERO(!linep,!linep));
+<INITIAL>{one} => (Tokens.ONE(!linep,!linep));
+<INITIAL>{two} => (Tokens.TWO(!linep,!linep));
+<INITIAL>{three} => (Tokens.THREE(!linep,!linep));
+
+<INITIAL>{alpha}+ => (Tokens.ID(yytext,!linep,!linep));
+<INITIAL>{dot}{alpha}+ => (if yytext=".model"
+						then Tokens.DOTMODEL(!linep,!linep)
+					else if yytext=".inputs"
+						then Tokens.DOTINPUTS(!linep,!linep)
+					else if yytext=".outputs"
+						then Tokens.DOTOUTPUTS(!linep,!linep)
+					else if yytext=".clock"
+						then Tokens.DOTCLOCK(!linep,!linep)
+					else if yytext=".end"
+						then Tokens.DOTEND(!linep,!linep)
+					else if yytext=".names"
+						then Tokens.NAMES(!linep,!linep)
+					else if yytext=".def"
+						then Tokens.DEF(!linep,!linep)
+					else if yytext=".gate"
+						then Tokens.GATE(!linep,!linep)
+					else if yytext=".subckt"
+						then Tokens.SUBCKT(!linep,!linep)
+					else Tokens.ID(yytext,!linep,!linep));
+
+. => (error ("ignoring bad character " ^ yytext, !linep, !linep);
+		continue());
 

@@ -1,43 +1,96 @@
-
 %%
 
 %name BLIF
 
-%term EOF | DOTMODEL | DOTINPUTS | DOTOUTPUTS | DOTCLOCK | DOTEND | ID of string
+%keyword
 
-%nonterm START | MODEL of AST.m | INPUTS of AST.a | OUTPUTS of AST.a | CLOCK of AST.a | IDENTLIST of AST.a
+%term DOTMODEL
+	| DOTINPUTS
+	| DOTOUTPUTS
+	| DOTCLOCK
+	| DOTEND
+	| NAMES
+	| DEF
+	| SUBCKT
+	| GATE
+	| EQUALS | DASH
+	| ID of string
+	| ZERO | ONE | TWO | THREE
+	| EOF
+
+%nonterm START of AST.m
+	| MODEL of AST.m
+	| INPUTS of string list
+	| OUTPUTS of string list
+	| CLOCK of string list
+	| IDENTLIST of string list
+	| COMMANDLIST of AST.c list
+	| COMMAND of AST.c
+	| LOGICGATE of AST.c
+	| SINGLEOUTPUTCOVER of AST.a list list
+	| ROWLIST of AST.a list list
+	| ROW of AST.a list
+	| MODELREF of AST.c
+	| FORMALACTUAL of AST.a
+	| FORMALACTUALLIST of AST.a list
 
 %pos int
 
+%start START
 %eop EOF
 %noshift EOF
 
+%nodefault
+
+%verbose
+
 %%
 
-(* start = model∗
-model = identifier × identifier∗ × identifier∗ × identifier∗ × component∗
-component = Comb(comb gate) | Latch(latch) | Subckt(subcircuit) | Reset(comb gate)
-comb gate = identifier∗ × identifier∗ × [row] × table
-table = (row × row)∗
-row = literal∗
-literal = 0 | 1 | DontCare
-latch = identifier × identifier
-subcircuit = identifier × form act
-form act = (identifier × identifier)∗ *)
+START : MODEL (MODEL1)
 
-	START : MODEL (MODEL1)
-	MODEL :
-		DOTMODEL ID INPUTS OUTPUTS CLOCK DOTEND (AST.Model (AST.ID ID1, INPUTS1, OUTPUTS1, CLOCK1))
-	INPUTS :
-		DOTINPUTS IDENTLIST (IDENTLIST1)
-		| (AST.EmptyList)
-	OUTPUTS :
-		DOTOUTPUTS IDENTLIST (IDENTLIST1)
-		| (AST.EmptyList)
-	CLOCK :
-		DOTCLOCK IDENTLIST (IDENTLIST1)
-		| (AST.EmptyList)
-	IDENTLIST :
-		IDENTLIST ID (AST.IDList (IDENTLIST1, AST.ID ID1))
-		| ID (AST.ID ID1)
+MODEL :
+	DOTMODEL ID INPUTS OUTPUTS CLOCK COMMANDLIST DOTEND
+	(AST.Model (ID1, INPUTS1, OUTPUTS1, CLOCK1, COMMANDLIST1))
+
+INPUTS : ([])
+	| DOTINPUTS IDENTLIST (IDENTLIST1)
+
+OUTPUTS : ([])
+	| DOTOUTPUTS IDENTLIST (IDENTLIST1)
+
+CLOCK : ([])
+	| DOTCLOCK IDENTLIST (IDENTLIST1)
+
+COMMANDLIST : ([])
+	| COMMAND COMMANDLIST (COMMAND1::COMMANDLIST1)
+
+COMMAND :
+	LOGICGATE (LOGICGATE1)
+	| MODELREF (MODELREF1)
+
+LOGICGATE :
+	NAMES IDENTLIST SINGLEOUTPUTCOVER (AST.LogicGate (IDENTLIST1, SINGLEOUTPUTCOVER1))
+
+MODELREF :
+	SUBCKT ID FORMALACTUALLIST (AST.ModelRef(ID1, FORMALACTUALLIST1))
+
+IDENTLIST : ([])
+	| ID IDENTLIST (ID1::IDENTLIST1)
+
+FORMALACTUALLIST : ([])
+	| FORMALACTUAL FORMALACTUALLIST (FORMALACTUAL1::FORMALACTUALLIST1)
+
+FORMALACTUAL :
+	ID EQUALS ID (AST.FormalActual(ID1, ID2))
+
+SINGLEOUTPUTCOVER :
+	ROWLIST (ROWLIST1)
+
+ROWLIST : ([])
+	| ROW ROWLIST (ROW1::ROWLIST1)
+
+ROW :
+	ZERO ROW (AST.Zero::ROW1)
+	| ONE ROW (AST.Zero::ROW1)
+	| DASH ROW (AST.Zero::ROW1)
 
