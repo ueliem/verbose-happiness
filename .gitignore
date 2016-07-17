@@ -1,4 +1,5 @@
 target
+.DS_STORE
 *.pyc
 *.lex.sml
 *.grm.sml
