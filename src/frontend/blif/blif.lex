@@ -26,7 +26,13 @@ val eof = fn fileName => T.EOF(!linep,!linep);
 
 alpha=[A-Za-z];
 digit=[0-9];
-ws = [\ \t\n];
+alphanumeric=[A-Za-z0-9];
+
+idstart=[A-Za-z$/];
+idchar=[A-Za-z0-9\$\/\.\_];
+
+ws = [\ \t];
+newline = "\n";
 dot=".";
 equals="=";
 dash="-";
@@ -40,6 +46,8 @@ integer = {digit}+;
 %%
 
 {ws}+ => (continue());
+{newline} => (linep := (!linep) + 1; continue());
+
 <INITIAL>{equals} => (Tokens.EQUALS(!linep,!linep));
 <INITIAL>{dash} => (Tokens.DASH(!linep,!linep));
 
@@ -48,8 +56,8 @@ integer = {digit}+;
 <INITIAL>{two} => (Tokens.TWO(!linep,!linep));
 <INITIAL>{three} => (Tokens.THREE(!linep,!linep));
 
-<INITIAL>{alpha}+ => (Tokens.ID(yytext,!linep,!linep));
-<INITIAL>{dot}{alpha}+ => (if yytext=".model"
+<INITIAL>{idstart}{idchar}* => (Tokens.ID(yytext,!linep,!linep));
+<INITIAL>{dot}{idstart}{idchar}* => (if yytext=".model"
 						then Tokens.DOTMODEL(!linep,!linep)
 					else if yytext=".inputs"
 						then Tokens.DOTINPUTS(!linep,!linep)

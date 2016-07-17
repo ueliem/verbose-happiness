@@ -14,6 +14,8 @@ struct
         Skip
         | LogicGate of string list * (a list list)
         | ModelRef of string * a list
+        | LibraryGate of string * a list
+        | LibraryLatch of string * a list
     and m =
         Model of string * string list * string list * string list * c list
 end
