@@ -9,6 +9,7 @@ end
 signature NETLIST =
 sig
     type netlist
+    type port
     type edge
     type node
     val empty : netlist
@@ -22,7 +23,8 @@ end
 structure Netlist : NETLIST =
 struct
     type node = int * string ref
-    type edge = node ref list * node ref list
+    type port = string * node ref
+    type edge = string * port ref list
     type netlist = node list * edge list
     val empty = ([],[])
     fun isEmpty ([], []) = true
