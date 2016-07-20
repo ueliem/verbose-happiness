@@ -46,7 +46,7 @@ integer = {digit}+;
 %%
 
 {ws}+ => (continue());
-{newline} => (linep := (!linep) + 1; continue());
+{newline} => (linep := (!linep) + 1; Tokens.NEWLINE(!linep,!linep));
 
 <INITIAL>{equals} => (Tokens.EQUALS(!linep,!linep));
 <INITIAL>{dash} => (Tokens.DASH(!linep,!linep));
