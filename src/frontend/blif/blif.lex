@@ -20,6 +20,7 @@ val eof = fn fileName => T.EOF(!linep,!linep);
 
 %%
 
+%s COMMENT;
 %header (functor BLIFLexFun(structure Tokens: BLIF_TOKENS));
 
 %arg (fileName:string);
@@ -45,8 +46,12 @@ integer = {digit}+;
 
 %%
 
-{ws}+ => (continue());
-{newline} => (linep := (!linep) + 1; Tokens.NEWLINE(!linep,!linep));
+<INITIAL>"#" => (YYBEGIN COMMENT; continue());
+<COMMENT>. => (continue());
+<COMMENT>{newline} => (linep := (!linep) + 1; YYBEGIN INITIAL; continue());
+
+<INITIAL>{ws}+ => (continue());
+<INITIAL>{newline} => (linep := (!linep) + 1; Tokens.NEWLINE(!linep,!linep));
 
 <INITIAL>{equals} => (Tokens.EQUALS(!linep,!linep));
 <INITIAL>{dash} => (Tokens.DASH(!linep,!linep));
