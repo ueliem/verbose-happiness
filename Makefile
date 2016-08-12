@@ -1,9 +1,13 @@
-build: parser
+build: blif-parser lef-parser
 	polyc src/main.sml -o target/placement
 
-parser:
+blif-parser:
 	mllex src/frontend/blif/blif.lex
 	mlyacc src/frontend/blif/blif.grm
+
+lef-parser:
+	mllex src/frontend/lef/lef.lex
+	mlyacc src/frontend/lef/lef.grm
 
 run:
 	./target/placement
