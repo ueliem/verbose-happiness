@@ -65,7 +65,8 @@ local
 		  ("EDGECAPACITANCE", T.EDGECAPACITANCE),
 		  ("VIA", T.VIA),
 		  ("DEFAULT", T.DEFAULT),
-		  ("RECT", T.RECT)]
+		  ("RECT", T.RECT),
+		  ("POLYGON", T.POLYGON)]
 in
     fun idToken (t, p) =
 	case List.find (fn (id, _) => id = t) idlist of
@@ -92,9 +93,9 @@ newline = "\n";
 dot=".";
 semicolon=";";
 
-integer = {digit}+;
-float = {digit}+"."{digit}+;
-scinot = {digit}+("."{digit}+)?"e"-?{digit}+;
+integer = -?{digit}+;
+float = -?{digit}+"."{digit}+;
+scinot = -?{digit}+("."{digit}+)?"e"-?{digit}+;
 stringchar = [^"];
 
 %%

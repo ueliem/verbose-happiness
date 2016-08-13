@@ -17,6 +17,13 @@ struct
         | VoltageVolts of real
         | DatabaseMicrons of real
         | FreqMHz of real
+    and pt =
+        Point of real * real
+    and shape =
+        Rect of pt * pt
+        | Polygon of pt list
+    and dl =
+        DrawLayer of string * (shape list)
     and s =
         VersionStmt of real
         | NamesCaseSensitiveStmt of bool
@@ -40,6 +47,7 @@ struct
             cap:real,
             ecap:real}
         | LayerImplant of {name:string}
+        | ViaStmt of {name:string,layers:dl list}
     and t =
         Top of s list
 end

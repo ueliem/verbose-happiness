@@ -31,6 +31,7 @@ struct
             | LEFAST.LayerCut name => init
             | LEFAST.LayerRouting name => init
             | LEFAST.LayerImplant name => init
+            | LEFAST.ViaStmt {name,layers} => init
 
     fun lef2lefdb (tree) =
         case tree of
