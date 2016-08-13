@@ -27,10 +27,19 @@ struct
         | UseMinSpacingObsStmt of bool
         | UseMinSpacingPinStmt of bool
         | ManufacturingGridStmt of real
-        | LayerMasterslice of string
-        | LayerCut of string
-        | LayerRouting of string
-        | LayerImplant of string
+        | LayerMasterslice of {name:string}
+        | LayerCut of {name:string,spacing:real}
+        | LayerRouting of
+            {name:string,
+            dir:d,
+            pitch:real,
+            offset:real,
+            width:real,
+            spacing:real,
+            res:real,
+            cap:real,
+            ecap:real}
+        | LayerImplant of {name:string}
     and t =
         Top of s list
 end
