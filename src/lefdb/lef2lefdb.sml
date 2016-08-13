@@ -27,6 +27,10 @@ struct
             | LEFAST.UseMinSpacingObsStmt b => init
             | LEFAST.UseMinSpacingPinStmt b => init
             | LEFAST.ManufacturingGridStmt g => init
+            | LEFAST.LayerMasterslice name => init
+            | LEFAST.LayerCut name => init
+            | LEFAST.LayerRouting name => init
+            | LEFAST.LayerImplant name => init
 
     fun lef2lefdb (tree) =
         case tree of

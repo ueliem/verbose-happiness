@@ -94,6 +94,7 @@ semicolon=";";
 
 integer = {digit}+;
 float = {digit}+"."{digit}+;
+scinot = {digit}+("."{digit}+)?"e"-?{digit}+;
 stringchar = [^"];
 
 %%
@@ -109,8 +110,9 @@ stringchar = [^"];
 
 <INITIAL>{idstart}{idchar}* => (idToken(yytext,!linep));
 
-<INITIAL>{integer} => (Tokens.INT(Option.valOf (Int.fromString yytext),!linep,!linep));
+<INITIAL>{integer} => (Tokens.REAL(Option.valOf (Real.fromString yytext),!linep,!linep));
 <INITIAL>{float} => (Tokens.REAL(Option.valOf (Real.fromString yytext),!linep,!linep));
+<INITIAL>{scinot} => (Tokens.REAL(Option.valOf (Real.fromString yytext),!linep,!linep));
 
 <INITIAL>\"{stringchar}*\" => (Tokens.STRING(
 				Option.valOf (String.fromString (String.substring (yytext, 1, String.size yytext - 2))),
