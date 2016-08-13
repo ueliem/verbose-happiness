@@ -38,6 +38,7 @@ local
 		  ("MASTERSLICE", T.MASTERSLICE),
 		  ("CUT", T.CUT),
 		  ("SPACING", T.SPACING),
+		  ("BY", T.BY),
 		  ("ROUTING", T.ROUTING),
 		  ("DIRECTION", T.DIRECTION),
 		  ("HORIZONTAL", T.HORIZONTAL),
@@ -45,6 +46,7 @@ local
 		  ("PITCH", T.PITCH),
 		  ("OFFSET", T.OFFSET),
 		  ("WIDTH", T.WIDTH),
+		  ("TO", T.TO),
 		  ("CAPACITANCE", T.CAPACITANCE),
 		  ("RESISTANCE", T.RESISTANCE),
 		  ("POWER", T.POWER),
@@ -66,7 +68,10 @@ local
 		  ("VIA", T.VIA),
 		  ("DEFAULT", T.DEFAULT),
 		  ("RECT", T.RECT),
-		  ("POLYGON", T.POLYGON)]
+		  ("VIARULE", T.VIARULE),
+		  ("GENERATE", T.GENERATE),
+		  ("OVERHANG", T.OVERHANG),
+		  ("METALOVERHANG", T.METALOVERHANG)]
 in
     fun idToken (t, p) =
 	case List.find (fn (id, _) => id = t) idlist of

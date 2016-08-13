@@ -32,6 +32,8 @@ struct
             | LEFAST.LayerRouting name => init
             | LEFAST.LayerImplant name => init
             | LEFAST.ViaStmt {name,layers} => init
+            | LEFAST.ViaRuleGenerateStmt {name,rlayer1,rlayer2,clayer} => init
+            | LEFAST.ViaRuleGenerateTurnStmt {name,rlayer1,rlayer2} => init
 
     fun lef2lefdb (tree) =
         case tree of

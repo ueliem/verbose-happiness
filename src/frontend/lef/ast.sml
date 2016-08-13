@@ -48,6 +48,15 @@ struct
             ecap:real}
         | LayerImplant of {name:string}
         | ViaStmt of {name:string,layers:dl list}
+        | ViaRuleGenerateStmt of
+            {name:string,
+            rlayer1:{name:string,dir:d,width:real*real,overhang:real,metaloverhang:real},
+            rlayer2:{name:string,dir:d,width:real*real,overhang:real,metaloverhang:real},
+            clayer:{name:string,shp:shape,spacing:real*real}}
+        | ViaRuleGenerateTurnStmt of
+            {name:string,
+            rlayer1:{name:string,dir:d},
+            rlayer2:{name:string,dir:d}}
     and t =
         Top of s list
 end
