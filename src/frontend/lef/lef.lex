@@ -71,7 +71,15 @@ local
 		  ("VIARULE", T.VIARULE),
 		  ("GENERATE", T.GENERATE),
 		  ("OVERHANG", T.OVERHANG),
-		  ("METALOVERHANG", T.METALOVERHANG)]
+		  ("METALOVERHANG", T.METALOVERHANG),
+		  ("SITE", T.SITE),
+		  ("CLASS", T.CLASS),
+		  ("PAD", T.PAD),
+		  ("CORE", T.CORE),
+		  ("SYMMETRY", T.SYMMETRY),
+		  ("X", T.X),
+		  ("Y", T.Y),
+		  ("SIZE", T.SIZE)]
 in
     fun idToken (t, p) =
 	case List.find (fn (id, _) => id = t) idlist of

@@ -8,6 +8,10 @@ struct
         MaxXY | Euclidean
     and d =
         Horizontal | Vertical
+    and class =
+        Pad | Core
+    and symmetry =
+        SymmX | SymmY | SymmXY
     and u =
         TimeNS of real
         | CapacitancePF of real
@@ -57,6 +61,7 @@ struct
             {name:string,
             rlayer1:{name:string,dir:d},
             rlayer2:{name:string,dir:d}}
+        | SiteStmt of {name:string,cls:class,sym:symmetry,size:real*real}
     and t =
         Top of s list
 end
